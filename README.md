@@ -51,7 +51,7 @@ node index.js
 
 1. Open the project in Unity Editor (the project was created on 2021.3.21f1)
 
-2. Open the c# project (Editor -> Open c# project)
+2. Open the C# project (Assets -> Open C# Project)
 
 3. Open `Config.cs` and update the `BackendServer` url.
 
