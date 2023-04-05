@@ -32,9 +32,12 @@ public class LoginMenuManager : MonoBehaviour {
         
         WalletData.Id = inputText;
 
-        var req = Web3Requests.GetInstance(this);
-        req.FindOrCreateWallet(WalletData.Id, () => {
+        Web3Requests.GetInstance(this).FindOrCreateWallet(WalletData.Id, () => {
             SceneManager.LoadScene(1);
+        }, () => {
+            Input.enabled = true;
+            LoginBtn.enabled = true;
+            buttonText.text = "Login";
         });
     }
 }

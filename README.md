@@ -39,7 +39,7 @@ Please note: make sure the clent secret doesn't get leaked, as it would allow ot
 
 ## 2. Configure the BackendServer project
 
-1. Open `index.js` and configure the project based on the instructions presented in the authentication method on line 11.
+1. Open `index.js` and configure the project based on the instructions presented in the authentication method on line 9.
 
 2. Start the server by running the following command in the `BackendServer` directory:
 

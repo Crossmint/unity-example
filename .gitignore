@@ -11,6 +11,9 @@
 /[Mm]emoryCaptures/
 /.idea
 
+/BackendServer/node_modules
+/BackendServer/.idea
+
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
 
@@ -59,4 +62,5 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
-.DS_Store
+*.DS_Store
+BackendServer/.env

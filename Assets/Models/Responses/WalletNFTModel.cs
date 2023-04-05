@@ -15,11 +15,4 @@ namespace DefaultNamespace.Models {
         public string locator;
         public string tokenStandard;
     }
-
-    [Serializable]
-    public class Metadata {
-        public string name;
-        public string image;
-        public string description;
-    }
 }

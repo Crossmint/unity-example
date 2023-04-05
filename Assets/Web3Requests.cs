@@ -18,7 +18,7 @@ namespace DefaultNamespace {
             return _instance;
         }
 
-        public void FindOrCreateWallet(string id, Action onFinished) {
+        public void FindOrCreateWallet(string id, Action onFinished, Action onFailed = null) {
             var user = new UserModel() {
                 userId = id
             };
@@ -30,7 +30,7 @@ namespace DefaultNamespace {
                 return true;
             }
             
-            var routine = PostRequest("/api/wallet", json, ParseResponse, onFinished);
+            var routine = PostRequest("/api/wallet", json, ParseResponse, onFinished, onFailed);
             StartCoroutine(routine);
         }
 
@@ -57,6 +57,8 @@ namespace DefaultNamespace {
             string json = JsonUtility.ToJson(user);
 
             bool ParseResponse(string data) {
+                var mint = JsonUtility.FromJson<MintModel>(data);
+                WalletData.PendingMints.Add(mint.id);
                 return true;
             }
             
@@ -64,6 +66,22 @@ namespace DefaultNamespace {
             StartCoroutine(routine);
         }
 
+        public void MintStatus(string id, Action onFinished) {
+            bool ParseResponse(string data) {
+                var mint = JsonUtility.FromJson<MintModel>(data);
+                if (mint.onChain.status == "success") {
+                    var url = $"https://nftstorage.link/ipfs/{mint.metadata.image.Substring(7)}";
+                    WalletData.ImageURLs.Add(url);
+                    return true;
+                }
+                
+                return false;
+            }
+            
+            var routine = GetRequest($"/api/mint/status?id={id}", ParseResponse, onFinished);
+            StartCoroutine(routine);
+        }
+        
         IEnumerator GetRequest(string path, Func<string, bool> postLogic, Action onFinished) {
             using (UnityWebRequest request = UnityWebRequest.Get(Config.BASEURL + path)) {
                 yield return request.SendWebRequest();
@@ -74,7 +92,11 @@ namespace DefaultNamespace {
                     yield break;
                 }
 
-                if (!postLogic(request.downloadHandler.text)) {
+                var response = request.downloadHandler.text;
+                
+                Debug.Log(response);
+                
+                if (!postLogic(response)) {
                     yield break;
                 }
                 
@@ -82,7 +104,7 @@ namespace DefaultNamespace {
             }
         }
 
-        IEnumerator PostRequest(string path, string bodyJsonString, Func<string, bool> postLogic, Action onFinished) {
+        IEnumerator PostRequest(string path, string bodyJsonString, Func<string, bool> postLogic, Action onFinished, Action onFailed = null) {
             Debug.Log(bodyJsonString);
             
             using (var request = new UnityWebRequest(Config.BASEURL + path, "POST")) {
@@ -92,9 +114,18 @@ namespace DefaultNamespace {
                 request.SetRequestHeader("Content-Type", "application/json");
                 yield return request.SendWebRequest();
 
-                Debug.Log(request.downloadHandler.text);
+                var response = request.downloadHandler.text;
+                Debug.Log(response);
+
+                if (response.Contains("error")) {
+                    if (onFailed != null) {
+                        onFailed();
+                    }
+
+                    throw new Exception("Server has thrown an error.");
+                }
                 
-                if (!postLogic(request.downloadHandler.text)) {
+                if (!postLogic(response)) {
                     yield break;
                 }
                 
