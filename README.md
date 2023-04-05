@@ -18,7 +18,7 @@ We have two environments, one for testing and one for release. These environment
 
 Open the `BackendServer` project, rename the `.env.template` file to `.env`.
 
-In the `.env` file, fill in your the fields with your information gathered from the Crossmint console (`CROSSMINT_X_CLIENT_SECRET` and `CROSSMINT_X_PROJECT_ID`).
+In the `.env` file, fill in the fields with your information gathered from the Crossmint console (`CROSSMINT_X_CLIENT_SECRET` and `CROSSMINT_X_PROJECT_ID`).
 
 The result should look something like this:
 
@@ -35,7 +35,7 @@ You can now modify the chain, collection and port to your desired values.
 
 And then save.
 
-Please note: make sure the clent secret doesn't get leaked, as it would allow others to create wallets for your users.
+Please note: make sure the client secret doesn't get leaked, as it would allow others to create wallets for your users.
 
 ## 2. Configure the BackendServer project
 
